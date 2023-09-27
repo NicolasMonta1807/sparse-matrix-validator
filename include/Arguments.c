@@ -1,4 +1,12 @@
-#include "Arguments.h"
+/**
+ * @file Arguments.c
+ * @brief Source file for command line arguments parsing
+ * @date 27/09/2023
+ * @version 1.0
+ * @authors Gabriel Espitia y Nicolás Montañez
+ */
+
+#include "Arguments.h" // Header file
 
 error_t parse_opt(int key, char *arg, struct argp_state *state)
 {
@@ -24,6 +32,7 @@ error_t parse_opt(int key, char *arg, struct argp_state *state)
   default:
     return ARGP_ERR_UNKNOWN;
   }
+
   return 0;
 }
 

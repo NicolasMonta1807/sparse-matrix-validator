@@ -1,15 +1,24 @@
-#include <stdio.h>
+/**
+ * @file Matrix.c
+ * @brief Source file for matrix operations
+ * @date 27/09/2023
+ * @version 1.0
+ * @authors Gabriel Espitia y Nicolás Montañez
+ */
 
-#include "Matrix.h"
+#include "Matrix.h" // Header file
 
 struct Matrix createMatrix(int rows, int columns)
 {
   int **data = (int **)malloc(rows * sizeof(int *));
+  struct Matrix matrix;
 
   for (int i = 0; i < rows; i++)
     data[i] = (int *)malloc(columns * sizeof(int));
 
-  struct Matrix matrix = {rows, columns, data};
+  matrix.rows = rows;
+  matrix.cols = columns;
+  matrix.data = data;
 
   return matrix;
 }
@@ -22,6 +31,7 @@ void loadMatrix(struct Matrix *matrix, char *filename)
     printf("Error opening file\n");
     exit(1);
   }
+
   for (int i = 0; i < matrix->rows; i++)
     for (int j = 0; j < matrix->cols; j++)
       fscanf(file, "%d", &matrix->data[i][j]);

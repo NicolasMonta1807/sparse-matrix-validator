@@ -1,26 +1,44 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <unistd.h>
-#include <pthread.h>
-#include <sys/wait.h>
+/**
+ * @file hdispersa.c
+ * @brief Source file for sparse matrix verification using POSIX threads
+ * @date 27/09/2023
+ * @version 1.0
+ * @author Gabriel Espitia
+ * @author Nicolás Montañez
+ */
 
-#include "Arguments.h"
-#include "Matrix.h"
+#include <stdlib.h>  // Standard library
+#include <stdio.h>   // Standard input/output definitions
+#include <math.h>    // Math library (ro
+#include <pthread.h> // POSIX threads library
 
+#include "Arguments.h" // Argumetns parsing
+#include "Matrix.h"    // Matrix operations
+
+/**
+ * @brief parameters for thread work operation
+ */
 struct ThreadArgs
 {
-  int toProcess[2];
+  int toProcess[2]; // First and last column to process
   int **matrix;
   int rows;
   int count;
 };
 
+/**
+ * @brief Thread work operation
+ * @param arg Thread arguments structure
+ * @see struct ThreadArgs
+ * @return void
+ */
 void *threadWork(void *arg)
 {
+  // Retrieve arguments from given structure
   struct ThreadArgs *args = (struct ThreadArgs *)arg;
   int total = 0;
 
+  // Count non-zero elements in the given column-section of the matrix
   for (int i = args->toProcess[0]; i < args->toProcess[1] + 1; i++)
   {
     for (int j = 0; j < args->rows; j++)
@@ -30,6 +48,7 @@ void *threadWork(void *arg)
     }
   }
 
+  // Save result in the given structure
   args->count = total;
   return arg;
 }

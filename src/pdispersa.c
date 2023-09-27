@@ -1,12 +1,32 @@
-#include <stdio.h>
-#include <stdlib.h>
-#include <math.h>
-#include <unistd.h>
-#include <sys/wait.h>
+/**
+ * @file pdispersa.c
+ * @brief Source file for sparse matrix verification using processes
+ * @date 27/09/2023
+ * @version 1.0
+ * @author Gabriel Espitia
+ * @author Nicolás Montañez
+ */
 
-#include "Arguments.h"
-#include "Matrix.h"
+#include <stdlib.h>   // Standard library
+#include <stdio.h>    // Standard input/output definitions
+#include <math.h>     // Math library (round)
+#include <unistd.h>   // Symbolic constants and types
+#include <sys/wait.h> // Wait for process termination
 
+#include "Arguments.h" // Argumetns parsing
+#include "Matrix.h"    // Matrix operations
+
+/**
+ * @brief Matrix sparse verification
+ *
+ * This function is used to count the number of non-zero elements in the given column-section of a matrix
+ * and return the result to the parent process.
+ *
+ * @param pipe_fd Pipe descriptor
+ * @param matrix Matrix pointer
+ * @param rows Number of rows in the matrix
+ * @return void
+ */
 void childProcessWork(int pipe_fd, int **matrix, int rows)
 {
   /**
