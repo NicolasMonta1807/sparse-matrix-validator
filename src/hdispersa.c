@@ -7,54 +7,19 @@
  * @author Nicolás Montañez
  */
 
-#include <stdlib.h>  // Standard library
-#include <stdio.h>   // Standard input/output definitions
-#include <math.h>    // Math library (ro
-#include <pthread.h> // POSIX threads library
-
+#include "ModuloHilos.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
-
-/**
- * @brief parameters for thread work operation
- */
-struct ThreadArgs
-{
-  int toProcess[2]; // First and last column to process
-  int **matrix;
-  int rows;
-  int count;
-};
-
-/**
- * @brief Thread work operation
- * @param arg Thread arguments structure
- * @see struct ThreadArgs
- * @return void
- */
-void *threadWork(void *arg)
-{
-  // Retrieve arguments from given structure
-  struct ThreadArgs *args = (struct ThreadArgs *)arg;
-  int total = 0;
-
-  // Count non-zero elements in the given column-section of the matrix
-  for (int i = args->toProcess[0]; i < args->toProcess[1] + 1; i++)
-  {
-    for (int j = 0; j < args->rows; j++)
-    {
-      if (args->matrix[j][i] != 0)
-        total++;
-    }
-  }
-
-  // Save result in the given structure
-  args->count = total;
-  return arg;
-}
+#include "RunningTime.h"
 
 int main(int argc, char *argv[])
 {
+  /**
+   * ---------- TIMER ----------
+   */
+  struct times *myTimes = (struct times *)malloc(sizeof(struct times));
+  startTimer(myTimes);
+
   /**
    * ---------- ARGUMENTOS ----------
    */
@@ -72,7 +37,7 @@ int main(int argc, char *argv[])
    */
 
   // Cantidad de columnas por hilo
-  int columnsPerThread = round((float)(arguments.columns / arguments.process));
+  int columnsPerThread = countColumnsPerThread(arguments.process, arguments.columns);
 
   // Indice de la columna inicial y final a procesar
   int start = 0;
@@ -82,64 +47,29 @@ int main(int argc, char *argv[])
    * ---------- HILOS ----------
    */
   pthread_t threads[arguments.process];
-  for (int i = 0; i < arguments.process; i++)
-  {
-
-    if (i == arguments.process - 1)
-      end = arguments.columns - 1;
-
-    // Estructura de argumentos para cada hilo
-    struct ThreadArgs *args = (struct ThreadArgs *)malloc(sizeof(struct ThreadArgs));
-    int *thread_num = (int *)malloc(sizeof(int));
-
-    // Inicializar argumentos
-    args->toProcess[0] = start;
-    args->toProcess[1] = end;
-    args->rows = arguments.rows;
-    args->matrix = sparseMatrix.data;
-
-    // Separación del hilo
-    pthread_create(&threads[i], NULL, threadWork, args);
-
-    // Actualización de indices
-    start = end + 1;
-    end = end + columnsPerThread;
-  }
-
+  threadCreation(threads, start, end, columnsPerThread, arguments.columns, arguments.rows, arguments.process, sparseMatrix.data);
   /**
    * ---------- PADRE ----------
    */
-  int total = 0;
-  for (int i = 0; i < arguments.process; i++)
-  {
-    // Recibir argumentos de cada hilo
-    struct ThreadArgs *args;
-    pthread_join(threads[i], (void **)&args);
-    // Sumar cantidad de elementos diferentes de cero
-    total += args->count;
-  }
+  int total = totalCount(threads, arguments.process);
 
   /**
    * ---------- RESULTADOS ----------
    */
-  int totalZero = (arguments.rows * arguments.columns) - total;
-  int totalSparse = (int)((float)(totalZero * 100) / (float)(arguments.rows * arguments.columns));
-  printf("La matriz en el archivo %s tiene un total %d ceros (%d\%): ", arguments.sparse, totalZero, totalSparse);
+  results(total, arguments.rows, arguments.columns, arguments.acceptance, arguments.sparse);
 
-  // Validación por porcentaje de aceptación
-  if (totalSparse >= arguments.acceptance)
-  {
-    printf("la matriz es dispersa.\n");
-  }
-  else
-  {
-    printf("la matriz NO es dispersa.\n");
-  }
+  if (arguments.columns <= 10 && arguments.rows <= 10)
+    printMatrix(&sparseMatrix);
 
   /**
    * ---------- LIBERAR MEMORIA ----------
    */
   freeMatrix(&sparseMatrix);
+
+  /**
+   * ---------- END TIMER ----------
+   */
+  endTimer(myTimes);
 
   return 0;
 }
