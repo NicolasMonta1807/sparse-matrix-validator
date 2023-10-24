@@ -42,6 +42,12 @@ int main(int argc, char *argv[])
    * ---------- MATRIZ ----------
    */
   struct Matrix sparseMatrix = createMatrix(arguments.rows, arguments.columns);
+  if (validateMatrix(arguments.sparse, arguments.rows, arguments.columns) != 1)
+  {
+    printf("Las filas y las columnas no son las correspondientes al archivo %s \n", arguments.sparse);
+    return -1;
+  }
+
   loadMatrix(&sparseMatrix, arguments.sparse);
 
   /**

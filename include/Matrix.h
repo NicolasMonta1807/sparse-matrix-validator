@@ -57,4 +57,13 @@ void printMatrix(struct Matrix *matrix);
  */
 void freeMatrix(struct Matrix *matrix);
 
+/**
+ * @brief Validates the rows and cols within the file
+ * @param filename name of the file to be read
+ * @param expectedRows number of rows that should be in the file
+ * @param expectedRows number of columns that should be in the file
+ * @return int 1 if valid
+ */
+int validateMatrix(char *filename, int expectedRows, int expectedCols);
+
 #endif // _MATRIX_H
