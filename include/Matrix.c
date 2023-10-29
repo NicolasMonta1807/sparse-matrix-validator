@@ -37,6 +37,39 @@ void loadMatrix(struct Matrix *matrix, char *filename)
       fscanf(file, "%d", &matrix->data[i][j]);
 }
 
+int validateMatrix(char *filename, int expectedRows, int expectedCols)
+{
+  FILE *file = fopen(filename, "r");
+  int filas = 0, columnas = 0;
+  char valor;
+  char newline = '\n';
+
+  // Abre el archivo
+
+  if (file == NULL)
+  {
+    fprintf(stderr, "No se pudo abrir el archivo.\n");
+    return 1;
+  }
+
+  // Lee la matriz
+  while (fscanf(file, "%c", &valor) == 1)
+  {
+    if (valor == newline)
+      filas++;
+    else if (valor != ' ')
+      columnas++;
+  }
+
+  if (valor != newline)
+    filas++;
+
+  // Cierra el archivo
+  fclose(file);
+
+  return ((filas == expectedRows) && ((columnas / filas) == expectedCols));
+}
+
 void printMatrix(struct Matrix *matrix)
 {
   for (int i = 0; i < matrix->rows; i++)

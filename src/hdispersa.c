@@ -7,29 +7,37 @@
  * @author Nicolás Montañez
  */
 
+#include <unistd.h>
+
 #include "ModuloHilos.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
-#include "RunningTime.h"
 
 int main(int argc, char *argv[])
 {
-  /**
-   * ---------- TIMER ----------
-   */
-  struct times *myTimes = (struct times *)malloc(sizeof(struct times));
-  startTimer(myTimes);
-
   /**
    * ---------- ARGUMENTOS ----------
    */
   struct arguments arguments;
   init_arguments(argc, argv, &arguments);
 
+  int number_of_processors = sysconf(_SC_NPROCESSORS_ONLN);
+  if (arguments.process > number_of_processors)
+  {
+    printf("No puede ejecutar mas procesos de los CPUs disponibles\n");
+    return -1;
+  }
+
   /**
    * ---------- MATRIZ ----------
    */
   struct Matrix sparseMatrix = createMatrix(arguments.rows, arguments.columns);
+  if (validateMatrix(arguments.sparse, arguments.rows, arguments.columns) != 1)
+  {
+    printf("Las filas y las columnas no son las correspondientes al archivo %s \n", arguments.sparse);
+    return -1;
+  }
+
   loadMatrix(&sparseMatrix, arguments.sparse);
 
   /**
@@ -46,6 +54,7 @@ int main(int argc, char *argv[])
   /**
    * ---------- HILOS ----------
    */
+
   pthread_t threads[arguments.process];
   threadCreation(threads, start, end, columnsPerThread, arguments.columns, arguments.rows, arguments.process, sparseMatrix.data);
   /**
@@ -65,11 +74,5 @@ int main(int argc, char *argv[])
    * ---------- LIBERAR MEMORIA ----------
    */
   freeMatrix(&sparseMatrix);
-
-  /**
-   * ---------- END TIMER ----------
-   */
-  endTimer(myTimes);
-
   return 0;
 }
