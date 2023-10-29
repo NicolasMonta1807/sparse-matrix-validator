@@ -11,8 +11,6 @@
 #include <sys/types.h>
 #include <time.h> // Time library
 
-#include "RunningTime.h"
-
 void childProcessWork(int *pipe_fd, int **matrix, int rows);
 int countColumnsPerProcess(int process, int columns);
 int totalWork(int process, int columns, int rows, int columnsPerProcess, int **data);

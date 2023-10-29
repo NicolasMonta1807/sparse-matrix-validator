@@ -10,8 +10,6 @@
 #include <unistd.h>  // Symbolic constants
 #include <time.h>    // Time library
 
-#include "RunningTime.h"
-
 struct ThreadArgs
 {
     int toProcess[2]; // First and last column to process

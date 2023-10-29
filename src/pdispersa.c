@@ -10,7 +10,6 @@
 #include "ModuloProcesos.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
-#include "RunningTime.h"
 
 /**
  * @brief Matrix sparse verification

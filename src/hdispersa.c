@@ -7,11 +7,11 @@
  * @author Nicolás Montañez
  */
 
+#include <unistd.h>
+
 #include "ModuloHilos.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
-#include <unistd.h>
-#include "RunningTime.h"
 
 int main(int argc, char *argv[])
 {
