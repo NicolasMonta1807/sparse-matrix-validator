@@ -1,10 +1,16 @@
 #ifndef _MODULOHILOS_H
 #define _MODULOHILOS_H
 
+#define BILLION 1000000000.0
+
 #include <stdlib.h>  // Standard library
 #include <stdio.h>   // Standard input/output definitions
 #include <math.h>    // Math library (ro
 #include <pthread.h> // POSIX threads library
+#include <unistd.h>  // Symbolic constants
+#include <time.h>    // Time library
+
+#include "RunningTime.h"
 
 struct ThreadArgs
 {

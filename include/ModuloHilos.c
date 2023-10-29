@@ -18,6 +18,10 @@ void *threadWork(void *arg)
 
     // Save result in the given structure
     args->count = total;
+
+    /**
+     * ---------- END TIMER ----------
+     */
     return arg;
 }
 
@@ -30,7 +34,6 @@ void threadCreation(pthread_t *threads, int start, int end, int columnsPerThread
 {
     for (int i = 0; i < process; i++)
     {
-
         if (i == process - 1)
             end = columns - 1;
 
@@ -55,7 +58,14 @@ void threadCreation(pthread_t *threads, int start, int end, int columnsPerThread
 
 int totalCount(pthread_t *threads, int process)
 {
+    /**
+     * ---------- TIMER ----------
+     */
+    struct timespec begin, end;
+    clock_gettime(CLOCK_REALTIME, &begin);
+
     int total = 0;
+
     for (int i = 0; i < process; i++)
     {
         // Recibir argumentos de cada hilo
@@ -64,6 +74,12 @@ int totalCount(pthread_t *threads, int process)
         // Sumar cantidad de elementos diferentes de cero
         total += args->count;
     }
+
+    clock_gettime(CLOCK_REALTIME, &end);
+    double time_spent = (end.tv_sec - begin.tv_sec) +
+                        (end.tv_nsec - begin.tv_nsec) / BILLION;
+    printf("Terminado en %f\n", total, time_spent);
+
     return total;
 }
 

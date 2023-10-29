@@ -2,6 +2,7 @@
 
 void startTimer(struct times *times)
 {
+
   times->start = clock();
 }
 

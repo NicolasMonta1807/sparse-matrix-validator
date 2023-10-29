@@ -1,5 +1,5 @@
 GCC=gcc
-CFLAGS= -I ./include -lpthread ./include/*.c
+CFLAGS= -I ./include -lpthread ./include/*.c -lm
 
 PROGS = threads process
 

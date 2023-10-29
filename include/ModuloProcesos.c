@@ -1,17 +1,15 @@
 #include "ModuloProcesos.h"
 
-void childProcessWork(int pipe_fd, int **matrix, int rows)
+void childProcessWork(int *pipe_fd, int **matrix, int rows)
 {
-    /**
-     * ---------- HIJO ----------
-     */
+    pid_t processID = getpid();
 
     // Recibir columnas a procesar
     int matrixSegment[2];
-    read(pipe_fd, matrixSegment, sizeof(matrixSegment));
-
+    read(pipe_fd[0], matrixSegment, sizeof(matrixSegment));
     // Contar elementos diferentes de cero en la matriz
     int count = 0;
+
     for (int i = matrixSegment[0]; i < matrixSegment[1] + 1; i++)
     {
         for (int j = 0; j < rows; j++)
@@ -24,11 +22,17 @@ void childProcessWork(int pipe_fd, int **matrix, int rows)
     // Retornar el valor procesado
     if (count <= 254)
     {
+        /**
+         * ---------- END TIMER ----------
+         */
         // Si el valor procesado es menor o igual a 254, se retorna el valor procesado
         exit(count);
     }
     else
     {
+        /**
+         * ---------- END TIMER ----------
+         */
         // Si el valor procesado es mayor a 254, se guarda el valor procesado en un archivo temporal
         char filename[20];
         sprintf(filename, "%d.txt", getpid());
@@ -41,11 +45,23 @@ void childProcessWork(int pipe_fd, int **matrix, int rows)
 
 int countColumnsPerProcess(int process, int columns)
 {
-    return round((float)(columns / process));
+    return round(((float)(columns) / (process)));
 }
 
-int totalWork(int process, int columns, int rows, int end, int start, int columnsPerProcess, int *pipe_fd, int **data)
+int totalWork(int process, int columns, int rows, int columnsPerProcess, int **data)
 {
+    // Comunicación entre procesos
+    int pipe_fd[2];
+    if (pipe(pipe_fd) == -1)
+    {
+        perror("Error en pipe");
+        exit(EXIT_FAILURE);
+    }
+
+    // Indice de la columna inicial y final a procesar
+    int start = 0;
+    int end = columnsPerProcess - 1;
+
     for (int i = 0; i < process; i++)
     {
         if (i == process - 1)
@@ -63,7 +79,8 @@ int totalWork(int process, int columns, int rows, int end, int start, int column
              * 3. Cantidad de filas por columna
              */
             write(pipe_fd[1], columns, sizeof(columns));
-            childProcessWork(pipe_fd[0], data, rows);
+
+            childProcessWork(pipe_fd, data, rows);
         }
         else if (pid < 0)
         {
@@ -75,7 +92,15 @@ int totalWork(int process, int columns, int rows, int end, int start, int column
         start = end + 1;
         end = end + columnsPerProcess;
     }
+
     int totalCount = 0;
+
+    /**
+     * ---------- TIMER ----------
+     */
+    struct timespec begin, final;
+    clock_gettime(CLOCK_REALTIME, &begin);
+
     for (int i = 0; i < process; i++)
     {
         int status;
@@ -115,6 +140,12 @@ int totalWork(int process, int columns, int rows, int end, int start, int column
             }
         }
     }
+
+    clock_gettime(CLOCK_REALTIME, &final);
+    double time_spent = (final.tv_sec - begin.tv_sec) +
+                        (final.tv_nsec - begin.tv_nsec) / BILLION;
+    printf("Terminado en %f\n", totalCount, time_spent);
+
     return totalCount;
 }
 
