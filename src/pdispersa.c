@@ -61,10 +61,7 @@ int main(int argc, char *argv[])
    * ---------- PROCESOS ----------
    */
 
-  clock_t start = clock();
   int totalCount = totalWork(arguments.process, arguments.columns, arguments.rows, columnsPerProcess, sparseMatrix.data);
-  clock_t end = clock();
-  printf("Tiempo de ejecucion: %f\n", ((double)(end - start) / CLOCKS_PER_SEC));
 
   /**
    * ---------- RESULTADOS ----------
