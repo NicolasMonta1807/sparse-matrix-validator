@@ -7,7 +7,7 @@
  * @author Nicolás Montañez
  */
 
-#include "ModuloProcesos.h"
+#include "Process.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
 

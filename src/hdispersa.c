@@ -9,7 +9,7 @@
 
 #include <unistd.h>
 
-#include "ModuloHilos.h"
+#include "Threads.h"
 #include "Arguments.h" // Argumetns parsing
 #include "Matrix.h"    // Matrix operations
 
