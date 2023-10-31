@@ -152,7 +152,7 @@ int totalWork(int process, int columns, int rows, int columnsPerProcess, int **d
     clock_gettime(CLOCK_REALTIME, &final);
     double time_spent = (final.tv_sec - begin.tv_sec) +
                         (final.tv_nsec - begin.tv_nsec) / BILLION;
-    printf("Terminado en %f\n", totalCount, time_spent);
+    printf("Terminado en %f\n", time_spent);
 
     return totalCount;
 }

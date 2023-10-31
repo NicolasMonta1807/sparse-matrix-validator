@@ -86,7 +86,7 @@ int totalCount(pthread_t *threads, int process)
     clock_gettime(CLOCK_REALTIME, &end);
     double time_spent = (end.tv_sec - begin.tv_sec) +
                         (end.tv_nsec - begin.tv_nsec) / BILLION;
-    printf("Terminado en %f\n", total, time_spent);
+    printf("Terminado en %f\n", time_spent);
 
     return total;
 }
