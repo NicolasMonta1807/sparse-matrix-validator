@@ -1,4 +1,12 @@
-#include "ModuloHilos.h"
+/**
+ * @file Threads.c
+ * @brief Source file for threads operations
+ * @date 31/10/2023
+ * @version 1.0
+ * @authors Gabriel Espitia y Nicolás Montañez
+ */
+
+#include "Threads.h"
 
 void *threadWork(void *arg)
 {

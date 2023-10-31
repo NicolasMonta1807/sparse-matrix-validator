@@ -1,4 +1,12 @@
-#include "ModuloProcesos.h"
+/**
+ * @file Process.c
+ * @brief Source file for process operations
+ * @date 31/10/2023
+ * @version 1.0
+ * @authors Gabriel Espitia y Nicolás Montañez
+ */
+
+#include "Process.h"
 
 void childProcessWork(int *pipe_fd, int **matrix, int rows)
 {

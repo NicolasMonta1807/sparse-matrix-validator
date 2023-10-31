@@ -1,3 +1,11 @@
+Autores: Gabriel Espitia Romero y Nicolás Montañez Velasco - Pontificia Universidad Javeriana
+
+Esta aplicación permite validar si una matriz es dispersa o no, es decir, si el porcentaje de ceros es mayor al porcentaje de elementos diferentes de cero. 
+Para esto se utilizan dos programas, uno que utiliza hilos y otro que utiliza procesos. 
+
+Ambos programas reciben como parámetros el número de filas, el número de columnas, el porcentaje de aceptación, 
+el número de hilos o procesos y el nombre del archivo que contiene la matriz a evaluar.
+
 Instrucciones de compilación:
 
 Diríjase a la carpeta  sparse-matrix-validator.
